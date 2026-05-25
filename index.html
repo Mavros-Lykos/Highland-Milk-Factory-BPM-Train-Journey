@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Highland Milk Factory - Group Train BPM Visualizer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #060913;
+      --card-bg: rgba(21, 29, 48, 0.7);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border: rgba(255, 255, 255, 0.08);
+      
+      --color-m1: #22c55e;
+      --color-m2: #eab308;
+      --color-m3: #3b82f6;
+      --color-m4: #f97316;
+      --color-m5: #ef4444;
+      --color-m6: #a855f7;
+      --color-m7: #6b7280;
+      --color-m8: #92400e;
+      --color-m9: #0d9488;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      overflow-x: hidden;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+    }
+
+    header {
+      padding: 2.5rem 3rem 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6, 9, 19, 0.8);
+    }
+
+    .brand-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .factory-stats {
+      display: flex;
+      gap: 2rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      border-radius: 1rem;
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+
+    .stat-lbl {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Train Track and Journey System */
+    .train-container {
+      padding: 4rem 3rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      scroll-behavior: smooth;
+      position: relative;
+    }
+
+    .train-track {
+      position: absolute;
+      bottom: 75px;
+      left: 0;
+      width: 4000px;
+      height: 8px;
+      background: linear-gradient(90deg, #334155 0%, #1e293b 100%);
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .train-track::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 100%;
+      height: 12px;
+      background-image: repeating-linear-gradient(90deg, #475569, #475569 4px, transparent 4px, transparent 40px);
+    }
+
+    .train-assembly {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+      padding-bottom: 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Locomotive Cabin */
+    .locomotive {
+      width: 320px;
+      height: 240px;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 2px solid #475569;
+      border-radius: 1rem 3rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+      position: relative;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .locomotive-engine {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .locomotive-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .steam-stack {
+      position: absolute;
+      top: -30px;
+      right: 50px;
+      width: 30px;
+      height: 40px;
+      background: #475569;
+      border-radius: 0.25rem;
+    }
+
+    .steam-stack::after {
+      content: '💨';
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      animation: steamBlow 2s infinite ease-out;
+      opacity: 0;
+    }
+
+    /* Carriage Cars */
+    .carriage {
+      display: inline-block;
+      width: 360px;
+      height: 200px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      position: relative;
+      white-space: normal;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+
+    .carriage:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .carriage-connector {
+      width: 1.5rem;
+      height: 12px;
+      background: #475569;
+      margin-bottom: 2rem;
+      border-radius: 4px;
+    }
+
+    .carriage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .carriage-icon {
+      font-size: 1.8rem;
+    }
+
+    .carriage-num {
+      font-family: monospace;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      color: var(--text-muted);
+    }
+
+    .carriage-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .carriage-owner {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .carriage-wheels {
+      display: flex;
+      justify-content: space-around;
+      position: absolute;
+      bottom: -15px;
+      left: 0;
+      right: 0;
+      padding: 0 2rem;
+    }
+
+    .wheel {
+      width: 32px;
+      height: 32px;
+      background: #334155;
+      border: 4px solid #1e293b;
+      border-radius: 50%;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
+      animation: wheelRoll 2s infinite linear;
+    }
+
+    /* Boarded Overlay for detailed flowcharts */
+    .boarding-view {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(6, 9, 19, 0.95);
+      z-index: 1000;
+      padding: 3rem;
+      overflow-y: auto;
+      backdrop-filter: blur(16px);
+    }
+
+    .boarding-header {
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 0.5rem 1.25rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .boarding-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Animation frames */
+    @keyframes steamBlow {
+      0% { transform: translate(-50%, 0) scale(0.8); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translate(-50%, -40px) scale(1.5); opacity: 0; }
+    }
+
+    @keyframes wheelRoll {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">
+      <h1>Highland Milk Factory <span>BPM Train Journey</span></h1>
+      <p>Group Presentation (AS_07) - Ambewela/Pattipola Operations Flow Database (9 Members)</p>
+    </div>
+    <div class="factory-stats">
+      <div class="stat-box">
+        <span class="stat-val">504</span>
+        <span class="stat-lbl">Total Processes</span>
+      </div>
+      <div class="stat-box" style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
+        <span class="stat-val">4,032+</span>
+        <span class="stat-lbl">Flow Activities</span>
+      </div>
+      <div class="stat-box" style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
+        <span class="stat-val">14,500</span>
+        <span class="stat-lbl">Farmers Linked</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="train-container">
+    <div class="train-track"></div>
+    <div class="train-assembly">
+      
+      <!-- Locomotive Engine -->
+      <div class="locomotive">
+        <div class="steam-stack"></div>
+        <div class="locomotive-engine">
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Milco Express</span>
+          <h2 class="locomotive-title">Pattipola Engine 09</h2>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Sri Lanka Dairy Sector Backbone</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 1 (DD&MP) -->
+      <div class="carriage" onclick="boardCarriage(1)" style="border-color: var(--color-m1);">
+        <div class="carriage-header">
+          <span class="carriage-icon">🥛</span>
+          <span class="carriage-num">CAR 01</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m1);">Milk Procurement</h3>
+        <p class="carriage-owner">Member 1 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 2 (Production) -->
+      <div class="carriage" onclick="boardCarriage(2)" style="border-color: var(--color-m2);">
+        <div class="carriage-header">
+          <span class="carriage-icon">🏭</span>
+          <span class="carriage-num">CAR 02</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m2);">Factory Production</h3>
+        <p class="carriage-owner">Member 2 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 3 (QA) -->
+      <div class="carriage" onclick="boardCarriage(3)" style="border-color: var(--color-m3);">
+        <div class="carriage-header">
+          <span class="carriage-icon">🔬</span>
+          <span class="carriage-num">CAR 03</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m3);">QA & Lab R&D</h3>
+        <p class="carriage-owner">Member 3 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 4 (Sales) -->
+      <div class="carriage" onclick="boardCarriage(4)" style="border-color: var(--color-m4);">
+        <div class="carriage-header">
+          <span class="carriage-icon">📊</span>
+          <span class="carriage-num">CAR 04</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m4);">Sales & Marketing</h3>
+        <p class="carriage-owner">Member 4 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 5 (Finance) -->
+      <div class="carriage" onclick="boardCarriage(5)" style="border-color: var(--color-m5);">
+        <div class="carriage-header">
+          <span class="carriage-icon">💰</span>
+          <span class="carriage-num">CAR 05</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m5);">Finance & Accounts</h3>
+        <p class="carriage-owner">Member 5 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 6 (HR) -->
+      <div class="carriage" onclick="boardCarriage(6)" style="border-color: var(--color-m6);">
+        <div class="carriage-header">
+          <span class="carriage-icon">👥</span>
+          <span class="carriage-num">CAR 06</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m6);">HR & Administration</h3>
+        <p class="carriage-owner">Member 6 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 7 (Engineering) -->
+      <div class="carriage" onclick="boardCarriage(7)" style="border-color: var(--color-m7);">
+        <div class="carriage-header">
+          <span class="carriage-icon">⚙️</span>
+          <span class="carriage-num">CAR 07</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m7);">Engineering & Projects</h3>
+        <p class="carriage-owner">Member 7 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 8 (Transport) -->
+      <div class="carriage" onclick="boardCarriage(8)" style="border-color: var(--color-m8);">
+        <div class="carriage-header">
+          <span class="carriage-icon">🚛</span>
+          <span class="carriage-num">CAR 08</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m8);">Logistics & Fleet</h3>
+        <p class="carriage-owner">Member 8 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- Carriage 9 (Procurement) -->
+      <div class="carriage" onclick="boardCarriage(9)" style="border-color: var(--color-m9);">
+        <div class="carriage-header">
+          <span class="carriage-icon">📦</span>
+          <span class="carriage-num">CAR 09</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m9);">Stores & Procurement</h3>
+        <p class="carriage-owner">Member 9 | 56 Processes</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Boarded Overlay -->
+  <div class="boarding-view" id="boardingView">
+    <div class="boarding-header">
+      <div>
+        <h2 id="boardedTitle" style="font-family: 'Outfit'; font-size: 2rem;">Carriage Details</h2>
+        <p id="boardedSub" style="color: var(--text-muted); margin-top: 0.25rem;">Boarded Carriage</p>
+      </div>
+      <button class="close-btn" onclick="exitCarriage()">Exit Carriage</button>
+    </div>
+    <div class="boarding-content" id="boardingContent">
+      <!-- Detailed category cards and links will be populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    const carriageData = {
+      1: { title: "Dairy Development & Milk Procurement", member: "Member 1", link: "../AS_08/members_1_2_3.html" },
+      2: { title: "Production & Factory Operations", member: "Member 2", link: "../AS_08/members_1_2_3.html" },
+      3: { title: "Quality Assurance & R&D Lab", member: "Member 3", link: "../AS_08/members_1_2_3.html" },
+      4: { title: "Sales & Marketing", member: "Member 4", link: "../AS_08/members_4_5_6.html" },
+      5: { title: "Finance & Accounting", member: "Member 5", link: "../AS_08/members_4_5_6.html" },
+      6: { title: "HR & General Administration", member: "Member 6", link: "../AS_08/members_4_5_6.html" },
+      7: { title: "Project Engineering & Maintenance", member: "Member 7", link: "../AS_08/members_7_8_9.html" },
+      8: { title: "Transport & Logistics", member: "Member 8", link: "../AS_08/members_7_8_9.html" },
+      9: { title: "Procurement & Stores", member: "Member 9", link: "../AS_08/members_7_8_9.html" }
+    };
+
+    function boardCarriage(id) {
+      const data = carriageData[id];
+      document.getElementById("boardedTitle").innerText = data.title;
+      document.getElementById("boardedSub").innerText = `Owned by ${data.member} | 56 Full Business Processes`;
+      
+      const content = document.getElementById("boardingContent");
+      content.innerHTML = `
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 3rem; border-radius: 1rem; text-align: center;">
+          <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Process Database Loaded</h3>
+          <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            This carriage contains 56 custom business flowcharts matching Milco's actual Ambewela/Pattipola setup.
+          </p>
+          <a href="${data.link}" target="_blank" style="display: inline-block; background: #3b82f6; color: #fff; text-decoration: none; padding: 0.75rem 1.75rem; border-radius: 0.5rem; font-weight: 600;">
+            Open Interactive Database & Flowcharts
+          </a>
+        </div>
+      `;
+      
+      document.getElementById("boardingView").style.display = "block";
+    }
+
+    function exitCarriage() {
+      document.getElementById("boardingView").style.display = "none";
+    }
+  </script>
+</body>
+</html>
