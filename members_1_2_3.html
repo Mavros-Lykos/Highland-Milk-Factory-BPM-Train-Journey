@@ -310,3 +310,57 @@
       color: var(--text-muted);
     }
 
+    /* Print Styles */
+    @media print {
+      body {
+        background-color: white;
+        color: black;
+        padding: 0;
+      }
+
+      header, .controls, .stats, .toggle-icon, .no-print {
+        display: none !important;
+      }
+
+      .category-group {
+        page-break-inside: avoid;
+      }
+
+      .process-card {
+        border: none;
+        background: transparent;
+        margin-bottom: 3rem;
+        page-break-inside: avoid;
+      }
+
+      .process-header {
+        cursor: default;
+        padding: 0 0 0.5rem 0;
+        border-bottom: 2px solid #000;
+      }
+
+      .process-content {
+        display: block !important;
+        padding: 1rem 0;
+      }
+
+      .flowchart-container {
+        background: transparent;
+        border: none;
+        padding: 1rem 0;
+      }
+
+      .flow-node {
+        color: black !important;
+        background: transparent !important;
+        border-color: black !important;
+      }
+
+      .comment-box {
+        border-left-color: #000;
+        color: #333;
+      }
+    }
+  </style>
+</head>
+<body>
