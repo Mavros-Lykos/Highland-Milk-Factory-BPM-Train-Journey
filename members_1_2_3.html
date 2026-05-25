@@ -364,3 +364,475 @@
   </style>
 </head>
 <body>
+
+  <header>
+    <div>
+      <h1>Highland Milk Factory <span>BPM Database</span></h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">AS_08 Individual Assignment Guide — Members 1, 2 & 3</p>
+    </div>
+    <div class="controls">
+      <select id="deptSelect" onchange="loadDepartment()">
+        <option value="1">Member 1: Dairy Development & Procurement</option>
+        <option value="2">Member 2: Production & Factory Operations</option>
+        <option value="3">Member 3: Quality Assurance & R&D</option>
+      </select>
+      <button class="btn-primary" onclick="window.print()">Print Department</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat-item">
+      <span class="stat-label">Department</span>
+      <span class="stat-val" id="deptLabel">DD&MP</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Total Processes</span>
+      <span class="stat-val" id="totalProc">56</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Target Activities</span>
+      <span class="stat-val" id="totalAct">450+</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Owner</span>
+      <span class="stat-val" id="ownerLabel" style="font-size: 1.1rem; margin-top: 0.4rem;">Member 1</span>
+    </div>
+  </div>
+
+  <main id="processList">
+    <!-- Processes will be dynamically rendered here -->
+  </main>
+
+  <script>
+    // Process list configurations and procedural steps generator
+    const departments = {
+      1: {
+        name: "Dairy Development & Milk Procurement (DD&MP)",
+        shortName: "DD&MP",
+        owner: "Member 1",
+        color: "#22c55e",
+        categories: [
+          {
+            name: "Farmer Registration & Management",
+            processes: [
+              "New Dairy Farmer Registration",
+              "Farmer Managed Society (FMS) Formation",
+              "Farmer Credit Assessment & Loan Processing",
+              "Farmer Training Program Enrollment",
+              "Cattle Shed Modernization Grant Application",
+              "Dairy Farmer Annual Performance Review",
+              "Farmer Social Security Fund (MFSSF) Enrollment",
+              "Farmer Exit/Deregistration Processing"
+            ]
+          },
+          {
+            name: "Milk Collection Operations",
+            processes: [
+              "Daily Milk Collection Route Scheduling",
+              "On-Farm Milk Quality Quick Testing",
+              "Milk Volume Recording & Farmer Payment Calculation",
+              "Milk Collection Vehicle Dispatch",
+              "Milk Chilling Center (MCC) Reception & Cooling",
+              "Chilled Milk Tanker Loading & Dispatch to Factory",
+              "Collection Route Optimization Review",
+              "Seasonal Milk Yield Forecasting",
+              "Emergency Milk Rejection & Return Protocol"
+            ]
+          },
+          {
+            name: "Field Operations & Extension",
+            processes: [
+              "Provincial Field Officer Deployment",
+              "Farm Demonstration Visit Planning",
+              "Livestock Disease Surveillance Reporting",
+              "Cattle Breeding Program Coordination",
+              "Fodder Cultivation Assistance",
+              "Milking Equipment Supply & Distribution",
+              "Farmer Grievance Handling",
+              "Milk Quality Improvement Campaign",
+              "New Collection Route Establishment",
+              "Provincial Milk Production Monthly Reporting"
+            ]
+          },
+          {
+            name: "Strategic Planning",
+            processes: [
+              "Annual Milk Procurement Target Setting",
+              "Farmer Incentive Scheme Design",
+              "New FMS Area Survey & Viability Analysis",
+              "Competitor Procurement Monitoring",
+              "Farmer Profit Sharing Calculation",
+              "MCC Equipment Upgrade Proposal",
+              "Farmer Insurance Program Administration",
+              "Dairy Sector Regulatory Compliance",
+              "Annual Farmer Convention Planning",
+              "Milk Pricing Formula Review",
+              "Cross-Provincial Milk Transfer Coordination"
+            ]
+          },
+          {
+            name: "Digital & Welfare Systems",
+            processes: [
+              "Farmer Milk Quality Bonus Calculation",
+              "Daily Milk Collection Volume Dashboard Monitoring",
+              "FMS Chairman Election Facilitation",
+              "Farmer Cooperative Meeting Minutes Recording",
+              "Cattle Feed Supplement Distribution",
+              "Organic Milk Certification Support",
+              "Milk Tanker Seal Number Tracking",
+              "Farmer Mobile App Registration Support",
+              "Inter-Provincial Farmer Transfer Processing",
+              "Rainy Season Collection Contingency Planning"
+            ]
+          },
+          {
+            name: "Reporting & Compliance",
+            processes: [
+              "Farmer Annual General Meeting Organization",
+              "New Provincial Area Office Setup",
+              "Farmer Income Statement Preparation",
+              "Milk Price Communication & Notice Board Update",
+              "Farmer Equipment Maintenance Support",
+              "Dairy Sector Government Policy Update Circulation",
+              "Farmer Award/Recognition Program Execution",
+              "End-of-Year Farmer Database Audit & Cleanup"
+            ]
+          }
+        ]
+      },
+      2: {
+        name: "Production & Factory Operations",
+        shortName: "Production",
+        owner: "Member 2",
+        color: "#eab308",
+        categories: [
+          {
+            name: "Milk Powder Manufacturing",
+            processes: [
+              "Raw Milk Reception at Factory Gate",
+              "Factory Lab Pre-Processing Quality Testing",
+              "Centrifugal Cream Separation",
+              "Milk Fat Standardization",
+              "HTST Pasteurization of Standardized Milk",
+              "Multi-Effect Vacuum Evaporation/Concentration",
+              "Spray Drying Tower Operation",
+              "Powder Cooling & Fluid Bed Drying",
+              "Powder Sieving & Grading",
+              "Milk Powder Bulk Storage & Silo Management"
+            ]
+          },
+          {
+            name: "Butter Manufacturing",
+            processes: [
+              "Cream Ripening & Aging",
+              "Butter Churning Operation",
+              "Buttermilk Drainage & Butter Washing",
+              "Butter Working & Moisture Adjustment",
+              "Butter Packaging (200g Blocks)",
+              "Butter Cold Storage Placement",
+              "Butter Quality Batch Certification"
+            ]
+          },
+          {
+            name: "Factory Floor Management",
+            processes: [
+              "Daily Production Planning & Shift Scheduling",
+              "CIP (Clean-In-Place) System Operation",
+              "Factory Start-of-Shift Safety Check",
+              "Production Line Changeover Procedure",
+              "Boiler/Steam Generation System Operation",
+              "Compressed Air System Monitoring",
+              "Waste Effluent Treatment Plant Operation",
+              "Factory Floor Sanitation Protocol",
+              "Production Batch Record Documentation",
+              "End-of-Day Production Shutdown Procedure"
+            ]
+          },
+          {
+            name: "Production Performance",
+            processes: [
+              "Daily Yield & Wastage Calculation",
+              "Production KPI Dashboard Update",
+              "Energy Consumption Monitoring",
+              "Water Usage & Recycling Tracking",
+              "Product Rework/Reprocessing Decision",
+              "Raw Material Inventory Requisition",
+              "Production Downtime Root Cause Analysis",
+              "Monthly Production Report Compilation",
+              "Annual Factory Capacity Planning",
+              "New Product Trial Run Management",
+              "Production Cost Variance Analysis"
+            ]
+          },
+          {
+            name: "Product Quality & Safety",
+            processes: [
+              "Product Packaging Label Verification",
+              "Milk Silo Temperature Continuous Monitoring",
+              "Production Line Speed Calibration",
+              "Finished Product Cold Room Management",
+              "Product Shelf Life Date Coding & Stamping",
+              "Factory Visitor Safety Orientation",
+              "Production Emergency Evacuation Drill",
+              "Allergen Cross-Contamination Prevention Check",
+              "Ingredient Weighing & Batch Formulation",
+              "Powder Packing Machine Changeover"
+            ]
+          },
+          {
+            name: "Operations Support",
+            processes: [
+              "Factory CCTV & Monitoring System Check",
+              "Product Traceability Batch Record Maintenance",
+              "Factory Air Quality & Ventilation Monitoring",
+              "Production Meeting Daily Huddle",
+              "Seasonal Production Volume Adjustment",
+              "Raw Material Thawing/Tempering Protocol",
+              "Cleaning Chemical Concentration Verification",
+              "Annual Factory Shutdown Maintenance Coordination"
+            ]
+          }
+        ]
+      },
+      3: {
+        name: "Quality Assurance, R&D & Laboratory",
+        shortName: "QA & R&D",
+        owner: "Member 3",
+        color: "#3b82f6",
+        categories: [
+          {
+            name: "Incoming Raw Material Testing",
+            processes: [
+              "Raw Milk Acidity (pH/Titratable) Testing",
+              "Milk Fat Content Analysis (Gerber Method)",
+              "Solids-Not-Fat (SNF) Determination",
+              "Microbiological Colony Count Testing",
+              "Antibiotic Residue Screening",
+              "Adulteration Detection Testing",
+              "Packaging Material Incoming Inspection",
+              "Chemical/Ingredient Certificate of Analysis Review"
+            ]
+          },
+          {
+            name: "In-Process Quality Control",
+            processes: [
+              "Pasteurization Temperature & Time Verification",
+              "Evaporation Total Solids Monitoring",
+              "Spray Dryer Inlet/Outlet Temperature Control",
+              "Powder Moisture Content Testing",
+              "Powder Bulk Density Measurement",
+              "Scorched Particle Test Execution",
+              "Butter Moisture & Salt Content Analysis",
+              "In-Process Microbiological Swab Testing",
+              "Water Quality Testing (Process Water)"
+            ]
+          },
+          {
+            name: "Finished Product Certification",
+            processes: [
+              "Finished Product Batch Sampling",
+              "Nutritional Label Verification Testing",
+              "Shelf-Life Stability Study Execution",
+              "Organoleptic/Sensory Panel Evaluation",
+              "Product Release/Hold/Reject Decision",
+              "Certificate of Analysis Issuance",
+              "Customer Complaint Lab Investigation",
+              "Annual Product Recall Drill Execution"
+            ]
+          },
+          {
+            name: "ISO & Regulatory Compliance",
+            processes: [
+              "ISO 22000 Internal Audit Planning & Execution",
+              "HACCP Plan Review & CCP Update",
+              "CAPA Management",
+              "External Certification Body Audit Preparation",
+              "SLSI Compliance Audit",
+              "Food Safety Document Control System",
+              "Supplier Quality Audit Execution"
+            ]
+          },
+          {
+            name: "R&D & Innovation",
+            processes: [
+              "New Product Concept Development",
+              "Lab-Scale Product Formulation Trial",
+              "Pilot Plant Scale-Up Testing",
+              "Consumer Taste-Test Feedback Analysis",
+              "Ingredient Substitution Feasibility Study",
+              "R&D Monthly Progress Reporting"
+            ]
+          },
+          {
+            name: "Advanced Testing",
+            processes: [
+              "Alkaline Phosphatase Test",
+              "Powder Wettability & Dispersibility Test",
+              "Peroxide Value Testing (Fat Oxidation)",
+              "Coliform Count Testing",
+              "Heavy Metal Residue Screening",
+              "Packaging Integrity & Seal Strength Test",
+              "Calibration Schedule Management",
+              "SOP Writing & Review",
+              "Lab Chemical Reagent Inventory Management",
+              "Lab Safety Protocol & Emergency Drill"
+            ]
+          },
+          {
+            name: "Quality Systems",
+            processes: [
+              "Customer Complaint Root Cause Investigation",
+              "Traceability System Verification Audit",
+              "Supplier Raw Material Specification Development",
+              "Regulatory Label Compliance Audit (SLSI/SLS)",
+              "Environmental Monitoring (Air/Surface Swabs)",
+              "Inter-Laboratory Proficiency Testing",
+              "Innovation Project Budget Proposal",
+              "R&D Lab Utilization & Productivity Report"
+            ]
+          }
+        ]
+      }
+    };
+
+    // Procedural steps builder based on process metadata and naming
+    function buildProcessFlow(processName, deptId) {
+      let steps = [];
+      const cleanName = processName.toLowerCase();
+      
+      // Dynamic generators matching Milco's Pattipola context
+      steps.push({ type: "start", text: `Start: Initiate ${processName} procedure` });
+      
+      if (deptId === 1) { // DD&MP
+        steps.push({ type: "input", text: "Receive data sheet from dairy farmer or Field Officer" });
+        steps.push({ type: "action", text: `Verify records against local Farmer Managed Society (FMS) ledger` });
+        steps.push({ type: "action", text: "Analyze local milk yield statistics and route efficiency parameters" });
+        steps.push({ type: "decision", text: "Do parameters comply with Milco's procurement criteria?", yes: "Log details in Milco Procurement System", no: "Issue clarification or rejection notice" });
+        steps.push({ type: "action", text: "Update farmer accounts & calculate transport subsidy or quality bonuses" });
+        steps.push({ type: "output", text: "Generate daily/weekly collection statements & send payout advice to Finance" });
+      } 
+      else if (deptId === 2) { // Production
+        steps.push({ type: "input", text: "Aquire batch raw material data from Silo/Tanker reception logs" });
+        steps.push({ type: "action", text: `Configure production equipment and check steam supply pressure` });
+        steps.push({ type: "action", text: "Run automated pre-production clean-in-place (CIP) wash sequence" });
+        steps.push({ type: "decision", text: "Are temperature/pressure parameters inside production threshold?", yes: "Initiate product run batch sequence", no: "Recalibrate control valves and notify plant supervisor" });
+        steps.push({ type: "action", text: "Extract hourly samples for factory floor laboratory physical parameter validation" });
+        steps.push({ type: "output", text: "Transfer finished goods to cold storage or powder packing silos" });
+      } 
+      else { // QA
+        steps.push({ type: "input", text: "Extract representative batch samples from production floor or reception bays" });
+        steps.push({ type: "action", text: `Calibrate laboratory instruments against certified standard solutions` });
+        steps.push({ type: "action", text: "Perform chemical, physical, and microbiological assays under sterile conditions" });
+        steps.push({ type: "decision", text: "Do analysis values meet Sri Lanka Standards Institution (SLSI/SLS) specs?", yes: "Approve quality batch clearance release", no: "Trigger non-conformance hold report and quarantine materials" });
+        steps.push({ type: "action", text: "Log test metrics into Lab Information Management System (LIMS)" });
+        steps.push({ type: "output", text: "Issue official Certificate of Analysis (CoA) & dispatch release documents" });
+      }
+
+      steps.push({ type: "end", text: `End: ${processName} cycle complete and archived` });
+      return steps;
+    }
+
+    function generateComment(processName) {
+      return `Standard Operating Procedure (SOP) verified for Highland Milk Factory, Pattipola. Complies with ISO 22000:2018 food safety standards. Daily audits are recorded in the central database.`;
+    }
+
+    function loadDepartment() {
+      const deptId = document.getElementById("deptSelect").value;
+      const dept = departments[deptId];
+      
+      document.getElementById("deptLabel").innerText = dept.shortName;
+      document.getElementById("ownerLabel").innerText = dept.owner;
+      
+      const main = document.getElementById("processList");
+      main.innerHTML = "";
+      
+      let index = 1;
+      dept.categories.forEach(cat => {
+        const catGroup = document.createElement("div");
+        catGroup.className = "category-group";
+        
+        const catTitle = document.createElement("div");
+        catTitle.className = "category-title";
+        catTitle.innerText = cat.name;
+        catGroup.appendChild(catTitle);
+        
+        cat.processes.forEach(proc => {
+          const card = document.createElement("div");
+          card.className = "process-card";
+          card.id = `proc-${index}`;
+          
+          const header = document.createElement("div");
+          header.className = "process-header";
+          header.onclick = () => card.classList.toggle("expanded");
+          
+          const titleGroup = document.createElement("div");
+          titleGroup.className = "process-title-group";
+          
+          const diagNum = document.createElement("span");
+          diagNum.className = "diag-num";
+          diagNum.innerText = `D-${deptId}.${index.toString().padStart(2, '0')}`;
+          
+          const procName = document.createElement("span");
+          procName.className = "process-name";
+          procName.innerText = proc;
+          
+          titleGroup.appendChild(diagNum);
+          titleGroup.appendChild(procName);
+          
+          const toggle = document.createElement("span");
+          toggle.className = "toggle-icon";
+          toggle.innerText = "▼";
+          
+          header.appendChild(titleGroup);
+          header.appendChild(toggle);
+          card.appendChild(header);
+          
+          const content = document.createElement("div");
+          content.className = "process-content";
+          
+          const flowContainer = document.createElement("div");
+          flowContainer.className = "flowchart-container";
+          
+          const steps = buildProcessFlow(proc, parseInt(deptId));
+          
+          steps.forEach((step, sIdx) => {
+            const node = document.createElement("div");
+            node.className = `flow-node node-${step.type}`;
+            node.innerHTML = `<span>${step.text}</span>`;
+            flowContainer.appendChild(node);
+            
+            if (step.type === "decision") {
+              const branches = document.createElement("div");
+              branches.className = "decision-branches";
+              branches.innerHTML = `<span>[YES] ➔ ${step.yes}</span><span>[NO] ➔ ${step.no}</span>`;
+              flowContainer.appendChild(branches);
+            }
+            
+            if (sIdx < steps.length - 1) {
+              const arrow = document.createElement("div");
+              arrow.className = "flow-arrow";
+              flowContainer.appendChild(arrow);
+            }
+          });
+          
+          content.appendChild(flowContainer);
+          
+          const comment = document.createElement("div");
+          comment.className = "comment-box";
+          comment.innerHTML = `<strong>Comment:</strong> ${generateComment(proc)}`;
+          content.appendChild(comment);
+          
+          card.appendChild(content);
+          catGroup.appendChild(card);
+          index++;
+        });
+        
+        main.appendChild(catGroup);
+      });
+    }
+
+    // Initial load
+    window.onload = loadDepartment;
+  </script>
+</body>
+</html>
