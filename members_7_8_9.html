@@ -362,3 +362,470 @@
     }
   </style>
 </head>
+<body>
+
+  <header>
+    <div>
+      <h1>Highland Milk Factory <span>BPM Database</span></h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">AS_08 Individual Assignment Guide — Members 7, 8 & 9</p>
+    </div>
+    <div class="controls">
+      <select id="deptSelect" onchange="loadDepartment()">
+        <option value="7">Member 7: Project Engineering & Maintenance</option>
+        <option value="8">Member 8: Transport & Logistics</option>
+        <option value="9">Member 9: Procurement & Stores</option>
+      </select>
+      <button class="btn-primary" onclick="window.print()">Print Department</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat-item">
+      <span class="stat-label">Department</span>
+      <span class="stat-val" id="deptLabel">Engineering</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Total Processes</span>
+      <span class="stat-val" id="totalProc">56</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Target Activities</span>
+      <span class="stat-val" id="totalAct">450+</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Owner</span>
+      <span class="stat-val" id="ownerLabel" style="font-size: 1.1rem; margin-top: 0.4rem;">Member 7</span>
+    </div>
+  </div>
+
+  <main id="processList">
+    <!-- Processes will be dynamically rendered here -->
+  </main>
+
+  <script>
+    const departments = {
+      7: {
+        name: "Project Engineering & Maintenance",
+        shortName: "Engineering",
+        owner: "Member 7",
+        color: "#6b7280",
+        categories: [
+          {
+            name: "Preventive Maintenance",
+            processes: [
+              "Spray Dryer System Scheduled Maintenance",
+              "Evaporator Tube Inspection & Cleaning",
+              "Pasteurizer Heat Exchanger Maintenance",
+              "Boiler Annual Inspection & Certification",
+              "Compressor & Refrigeration System Maintenance",
+              "Electrical Panel & Distribution Board Inspection",
+              "CIP System Pump & Valve Maintenance",
+              "Factory Piping Network Integrity Check",
+              "Weighing & Measuring Instrument Calibration",
+              "Fire Safety System Maintenance"
+            ]
+          },
+          {
+            name: "Breakdown/Corrective Maintenance",
+            processes: [
+              "Emergency Breakdown Work Order Generation",
+              "Spare Part Availability Check & Requisition",
+              "Machine Fault Diagnosis & Repair Execution",
+              "Post-Repair Testing & Commissioning",
+              "Root Cause Failure Analysis Documentation",
+              "Contractor/External Technician Engagement",
+              "Maintenance Backlog Review & Prioritization"
+            ]
+          },
+          {
+            name: "Capital Projects & Upgrades",
+            processes: [
+              "Capital Project Proposal & Feasibility Study",
+              "Engineering Drawing/Design Review",
+              "Government Procurement Tender (BOQ) Preparation",
+              "Contractor Selection & Contract Award",
+              "Construction/Installation Supervision",
+              "Project Progress Monitoring & Milestone Tracking",
+              "Project Commissioning & Handover",
+              "Post-Project Evaluation Report"
+            ]
+          },
+          {
+            name: "Utilities & Energy",
+            processes: [
+              "Factory Power Supply Monitoring & Load Balancing",
+              "Diesel/Fuel Stock Management for Boilers",
+              "Water Treatment Plant Operation",
+              "Standby Generator Maintenance & Testing",
+              "Solar Panel System Monitoring",
+              "Energy Efficiency Audit Execution",
+              "Environmental Emission Monitoring & Reporting"
+            ]
+          },
+          {
+            name: "Workshop & Tools",
+            processes: [
+              "Workshop Tool & Equipment Inventory",
+              "Welding & Fabrication Job Execution",
+              "Building & Civil Structure Maintenance",
+              "Factory Layout Modification Planning",
+              "Maintenance KPI & MTBF Reporting",
+              "Annual Maintenance Budget Planning"
+            ]
+          },
+          {
+            name: "Advanced Engineering",
+            processes: [
+              "PLC/SCADA System Software Update",
+              "Compressed Air Quality & Dew Point Testing",
+              "Elevator/Lift Annual Safety Certification",
+              "Factory Roof & Gutter Inspection",
+              "Lightning Protection System Verification",
+              "Crane & Lifting Equipment Load Testing",
+              "Chemical Storage Tank Integrity Inspection",
+              "Factory Drainage System Maintenance",
+              "Air Handling Unit Filter Replacement",
+              "Vibration Analysis on Rotating Equipment"
+            ]
+          },
+          {
+            name: "Engineering Compliance",
+            processes: [
+              "Electrical Earthing System Testing",
+              "Emergency Power Switchover Testing",
+              "Factory Signage & Safety Marking Refresh",
+              "Thermal Insulation Integrity Assessment",
+              "HVAC System Seasonal Commissioning",
+              "As-Built Drawing & Document Update",
+              "Contractor Safety Induction & Work Permit",
+              "Annual Maintenance Strategy Review"
+            ]
+          }
+        ]
+      },
+      8: {
+        name: "Transport & Logistics",
+        shortName: "Transport",
+        owner: "Member 8",
+        color: "#92400e",
+        categories: [
+          {
+            name: "Milk Collection Transport",
+            processes: [
+              "Daily Milk Tanker Route Assignment",
+              "Tanker Pre-Trip Inspection & CPC Check",
+              "Insulated Tanker Temperature Monitoring",
+              "GPS Fleet Tracking & Real-Time Monitoring",
+              "Driver Daily Log & Trip Sheet Documentation",
+              "Milk Tanker Cleaning & Sanitization",
+              "Emergency Tanker Breakdown Response",
+              "Tanker Capacity Planning (Seasonal Peaks)",
+              "Milk Spillage/Loss Investigation & Reporting"
+            ]
+          },
+          {
+            name: "Product Distribution",
+            processes: [
+              "Finished Product Dispatch Order Processing",
+              "Distribution Vehicle Loading & Sealing",
+              "Delivery Route Optimization (25 Districts)",
+              "Cold Storage Transfer Vehicle Temperature Log",
+              "Proof of Delivery Capture & Documentation",
+              "Returned/Rejected Product Reverse Logistics",
+              "Inter-Factory Product Transfer Coordination",
+              "Third-Party Logistics Provider Management",
+              "Last-Mile Delivery (Dealer Drop Point)"
+            ]
+          },
+          {
+            name: "Fleet Management",
+            processes: [
+              "Vehicle Registration & Insurance Renewal",
+              "Vehicle Periodic Service Scheduling",
+              "Tire Management & Replacement Tracking",
+              "Fuel Consumption Monitoring & Cost Control",
+              "Vehicle Accident/Incident Investigation",
+              "New Vehicle Procurement Proposal",
+              "Vehicle Disposal/Write-Off Processing",
+              "Driver Recruitment & License Verification",
+              "Driver Performance Evaluation",
+              "Driver Safety Training & Defensive Driving"
+            ]
+          },
+          {
+            name: "Warehouse & Distribution Center",
+            processes: [
+              "Warehouse Finished Goods Inventory Management",
+              "Warehouse FIFO/FEFO Stock Rotation",
+              "Cold Room Temperature Alarm Response",
+              "Warehouse Pest Control & Hygiene Audit",
+              "Stock Physical Count & Variance Reconciliation",
+              "Warehouse Space Utilization Planning",
+              "Loading Dock Scheduling & Queue Management",
+              "Transport Cost Per Unit Analysis",
+              "Annual Fleet Replacement Plan",
+              "Transport Regulatory Compliance (RMV/NTC)"
+            ]
+          },
+          {
+            name: "Cold Chain & Compliance",
+            processes: [
+              "Milk Collection Tanker Calibration",
+              "Driver Alcohol/Drug Testing Protocol",
+              "Vehicle Washing & Disinfection Schedule",
+              "GPS/Tracking Device Installation & Calibration",
+              "Transport Insurance Claim Processing",
+              "Toll Fee & Route Expense Accounting",
+              "Vehicle First Aid Kit Inspection",
+              "Cross-Dock Transfer Facility Operations",
+              "Temperature Excursion Investigation",
+              "Vehicle Weight Compliance Check"
+            ]
+          },
+          {
+            name: "Advanced Transport",
+            processes: [
+              "Driver Fatigue Management Policy",
+              "Annual Vehicle Fitness Certificate Renewal",
+              "Fuel Card Management & Misuse Prevention",
+              "Vehicle Branding & Logo Application",
+              "Transport Route Optimization Initiative",
+              "Emergency Communication Protocol for Drivers",
+              "Vehicle Modification & Body Building Approval",
+              "Monthly Transport Dashboard & KPI Reporting"
+            ]
+          }
+        ]
+      },
+      9: {
+        name: "Procurement & Stores (Purchasing)",
+        shortName: "Procurement",
+        owner: "Member 9",
+        color: "#0d9488",
+        categories: [
+          {
+            name: "Material Requisition & Ordering",
+            processes: [
+              "Purchase Requisition Receipt & Validation",
+              "Supplier Identification & RFQ",
+              "Quotation Comparison & Evaluation",
+              "Purchase Order Generation & Approval",
+              "Government Procurement Committee Approval",
+              "Import Purchase Order (LC/TT) Processing",
+              "Emergency/Urgent Purchase Processing",
+              "Annual Rate Contract Negotiation",
+              "Framework Agreement for Recurring Supplies"
+            ]
+          },
+          {
+            name: "Supplier Management",
+            processes: [
+              "New Supplier Registration & Evaluation",
+              "Supplier Performance Scorecard",
+              "Supplier Site Visit & Audit",
+              "Supplier Non-Conformance Reporting",
+              "Supplier Payment Terms Negotiation",
+              "Preferred Supplier List Annual Review",
+              "Supplier Relationship Management Meeting",
+              "Supplier Dispute Resolution"
+            ]
+          },
+          {
+            name: "Central Stores & Inventory",
+            processes: [
+              "Goods Received Note (GRN) Processing",
+              "Incoming Material Inspection & Acceptance",
+              "Store Bin Location Assignment",
+              "Materials Issue to Production (MIR)",
+              "Stock Reorder Level Trigger & Auto-PO",
+              "Monthly Stock Take & Verification",
+              "Obsolete/Expired Stock Disposal",
+              "Packaging Material Stock Control",
+              "Chemical & Cleaning Agent Stock Management",
+              "Spare Parts Inventory & Codification",
+              "Store Security & Access Control"
+            ]
+          },
+          {
+            name: "Procurement Compliance",
+            processes: [
+              "Government Tender Document Preparation",
+              "Technical Evaluation Committee Report",
+              "Procurement Audit Trail Documentation",
+              "Import Customs Clearance & Documentation",
+              "Procurement Budget vs. Actual Tracking",
+              "Local vs. Import Procurement Analysis",
+              "Inventory Valuation (Weighted Average)",
+              "Material Wastage & Scrap Disposal",
+              "Annual Procurement Plan Development",
+              "Store Management Monthly Reporting"
+            ]
+          },
+          {
+            name: "Strategic Procurement",
+            processes: [
+              "Packaging Specification Change Management",
+              "Vendor Catalogue & Price List Update",
+              "Government Gazette Tender Advertisement",
+              "Sample Evaluation & Trial Order Processing",
+              "Import License Application & Renewal",
+              "Foreign Supplier Payment (LC) Tracking",
+              "Warehouse Fumigation & Pest Treatment",
+              "MSDS Filing System Management",
+              "Store Bin Card vs. System Reconciliation",
+              "Packaging Print Proof Approval"
+            ]
+          },
+          {
+            name: "Advanced Procurement",
+            processes: [
+              "Seasonal Bulk Purchase Planning",
+              "Surplus Material Inter-Factory Transfer",
+              "Capital Goods Import Duty Exemption",
+              "Store Insurance Claim Processing",
+              "Vendor Blacklisting & Debarment",
+              "Green Procurement Policy Implementation",
+              "Annual Physical Stock Verification",
+              "Procurement Committee Minutes & Documentation"
+            ]
+          }
+        ]
+      }
+    };
+
+    function buildProcessFlow(processName, deptId) {
+      let steps = [];
+      steps.push({ type: "start", text: `Start: Initiate ${processName} sequence` });
+      
+      if (deptId === 7) { // Engineering
+        steps.push({ type: "input", text: "Acquire preventive maintenance schedule or emergency breakdown ticket details" });
+        steps.push({ type: "action", text: "Verify tool availability & shut down power supply line (LOTO protocol)" });
+        steps.push({ type: "action", text: "Inspect mechanical/electrical components and replace worn parts" });
+        steps.push({ type: "decision", text: "Does equipment performance test meet ISO calibration criteria?", yes: "Commission machine back into service & close work ticket", no: "Escalate to Senior Engineer & schedule specialized contractor repair" });
+        steps.push({ type: "action", text: "Log maintenance activities and parts used into Engineering Inventory System" });
+        steps.push({ type: "output", text: "Deliver updated equipment log and compliance certificate to Operations" });
+      } 
+      else if (deptId === 8) { // Transport
+        steps.push({ type: "input", text: "Acquire dispatch manifest or collection route log data sheet" });
+        steps.push({ type: "action", text: "Execute vehicle safety checks & inspect refrigeration settings (3-4°C)" });
+        steps.push({ type: "action", text: "Monitor real-time GPS fleet tracking coordinates" });
+        steps.push({ type: "decision", text: "Are temperature parameters verified within cold chain limit?", yes: "Proceed along route and record proof of delivery receipt", no: "Instruct driver to divert tanker and initiate emergency cold chain protocols" });
+        steps.push({ type: "action", text: "Submit final trip sheet details & fuel consumption records" });
+        steps.push({ type: "output", text: "Generate daily transport log and send fuel usage statement to Finance" });
+      } 
+      else { // Procurement
+        steps.push({ type: "input", text: "Review material requisition requests or incoming supplier quotes" });
+        steps.push({ type: "action", text: "Ensure compliance with government tender procurement rules" });
+        steps.push({ type: "action", text: "Select candidate vendor & generate official purchase order (PO)" });
+        steps.push({ type: "decision", text: "Does procurement amount require Government Procurement Committee approval?", yes: "Submit documentation to Committee and wait for official sign-off", no: "Approve order directly and transmit purchase order to supplier" });
+        steps.push({ type: "action", text: "Receive materials, generate Goods Received Note (GRN), and allocate storage bins" });
+        steps.push({ type: "output", text: "Dispatch certified GRN and matching supplier invoice to Accounts Payable" });
+      }
+
+      steps.push({ type: "end", text: `End: ${processName} cycle complete` });
+      return steps;
+    }
+
+    function generateComment(processName) {
+      return `BPM process validated for Highland Milk Factory, Pattipola. All steps comply with RMV/NTC transport safety rules and government procurement guidelines.`;
+    }
+
+    function loadDepartment() {
+      const deptId = document.getElementById("deptSelect").value;
+      const dept = departments[deptId];
+      
+      document.getElementById("deptLabel").innerText = dept.shortName;
+      document.getElementById("ownerLabel").innerText = dept.owner;
+      
+      const main = document.getElementById("processList");
+      main.innerHTML = "";
+      
+      let index = 1;
+      dept.categories.forEach(cat => {
+        const catGroup = document.createElement("div");
+        catGroup.className = "category-group";
+        
+        const catTitle = document.createElement("div");
+        catTitle.className = "category-title";
+        catTitle.innerText = cat.name;
+        catGroup.appendChild(catTitle);
+        
+        cat.processes.forEach(proc => {
+          const card = document.createElement("div");
+          card.className = "process-card";
+          card.id = `proc-${index}`;
+          
+          const header = document.createElement("div");
+          header.className = "process-header";
+          header.onclick = () => card.classList.toggle("expanded");
+          
+          const titleGroup = document.createElement("div");
+          titleGroup.className = "process-title-group";
+          
+          const diagNum = document.createElement("span");
+          diagNum.className = "diag-num";
+          diagNum.innerText = `D-${deptId}.${index.toString().padStart(2, '0')}`;
+          
+          const procName = document.createElement("span");
+          procName.className = "process-name";
+          procName.innerText = proc;
+          
+          titleGroup.appendChild(diagNum);
+          titleGroup.appendChild(procName);
+          
+          const toggle = document.createElement("span");
+          toggle.className = "toggle-icon";
+          toggle.innerText = "▼";
+          
+          header.appendChild(titleGroup);
+          header.appendChild(toggle);
+          card.appendChild(header);
+          
+          const content = document.createElement("div");
+          content.className = "process-content";
+          
+          const flowContainer = document.createElement("div");
+          flowContainer.className = "flowchart-container";
+          
+          const steps = buildProcessFlow(proc, parseInt(deptId));
+          
+          steps.forEach((step, sIdx) => {
+            const node = document.createElement("div");
+            node.className = `flow-node node-${step.type}`;
+            node.innerHTML = `<span>${step.text}</span>`;
+            flowContainer.appendChild(node);
+            
+            if (step.type === "decision") {
+              const branches = document.createElement("div");
+              branches.className = "decision-branches";
+              branches.innerHTML = `<span>[YES] ➔ ${step.yes}</span><span>[NO] ➔ ${step.no}</span>`;
+              flowContainer.appendChild(branches);
+            }
+            
+            if (sIdx < steps.length - 1) {
+              const arrow = document.createElement("div");
+              arrow.className = "flow-arrow";
+              flowContainer.appendChild(arrow);
+            }
+          });
+          
+          content.appendChild(flowContainer);
+          
+          const comment = document.createElement("div");
+          comment.className = "comment-box";
+          comment.innerHTML = `<strong>Comment:</strong> ${generateComment(proc)}`;
+          content.appendChild(comment);
+          
+          card.appendChild(content);
+          catGroup.appendChild(card);
+          index++;
+        });
+        
+        main.appendChild(catGroup);
+      });
+    }
+
+    window.onload = loadDepartment;
+  </script>
+</body>
+</html>
