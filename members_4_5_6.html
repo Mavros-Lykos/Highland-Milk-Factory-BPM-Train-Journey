@@ -362,3 +362,470 @@
     }
   </style>
 </head>
+<body>
+
+  <header>
+    <div>
+      <h1>Highland Milk Factory <span>BPM Database</span></h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">AS_08 Individual Assignment Guide — Members 4, 5 & 6</p>
+    </div>
+    <div class="controls">
+      <select id="deptSelect" onchange="loadDepartment()">
+        <option value="4">Member 4: Sales & Marketing</option>
+        <option value="5">Member 5: Finance & Accounting</option>
+        <option value="6">Member 6: HR & Administration</option>
+      </select>
+      <button class="btn-primary" onclick="window.print()">Print Department</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat-item">
+      <span class="stat-label">Department</span>
+      <span class="stat-val" id="deptLabel">Sales</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Total Processes</span>
+      <span class="stat-val" id="totalProc">56</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Target Activities</span>
+      <span class="stat-val" id="totalAct">450+</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Owner</span>
+      <span class="stat-val" id="ownerLabel" style="font-size: 1.1rem; margin-top: 0.4rem;">Member 4</span>
+    </div>
+  </div>
+
+  <main id="processList">
+    <!-- Processes will be dynamically rendered here -->
+  </main>
+
+  <script>
+    const departments = {
+      4: {
+        name: "Sales & Marketing",
+        shortName: "Sales",
+        owner: "Member 4",
+        color: "#f97316",
+        categories: [
+          {
+            name: "Brand & Product Marketing",
+            processes: [
+              "Annual Marketing Strategy Development",
+              "Highland Brand Identity & Packaging Design Update",
+              "TV/Radio/Print Advertising Campaign Planning",
+              "Digital & Social Media Content Calendar Execution",
+              "Product Launch Campaign (New SKU Introduction)",
+              "Seasonal/Festival Promotional Campaign",
+              "Sponsorship & Event Marketing Proposal",
+              "Marketing Budget Allocation & Tracking"
+            ]
+          },
+          {
+            name: "Sales Operations",
+            processes: [
+              "Dealer/Distributor Appointment & Onboarding",
+              "Monthly Sales Target Setting (25 Districts)",
+              "Sales Order Processing & Confirmation",
+              "Area Sales Manager Route Plan Development",
+              "Key Account (Supermarket Chain) Negotiation",
+              "Trade Discount & Credit Terms Management",
+              "Sales Invoice Generation & Dispatch",
+              "Customer Payment Collection & Reconciliation",
+              "Dealer Stock Replenishment Order",
+              "Product Return/Damage Claim Processing",
+              "Sales Team Commission Calculation"
+            ]
+          },
+          {
+            name: "Market Intelligence",
+            processes: [
+              "Competitor Product & Price Monitoring",
+              "Market Share Analysis Reporting",
+              "Consumer Survey Design & Execution",
+              "Retail Store Visit & Shelf Audit",
+              "Customer Complaint Tracking & Resolution",
+              "Product Pricing Strategy Review",
+              "Geographic Expansion Feasibility Assessment",
+              "Export Market Opportunity Evaluation",
+              "Monthly Sales Performance Dashboard"
+            ]
+          },
+          {
+            name: "Distribution & Channel",
+            processes: [
+              "Cold Chain Distribution Network Planning",
+              "Warehouse-to-Dealer Dispatch Coordination",
+              "Regional Warehouse Stock Level Monitoring",
+              "Van Sales Route Execution",
+              "Online/E-Commerce Order Fulfillment",
+              "Institutional Sales Tender (Hotels/Hospitals)",
+              "Product Sampling Campaign Execution",
+              "Dealer Loyalty Program Management",
+              "Annual Dealer Conference Organization",
+              "Sales Forecast vs. Actual Variance Analysis"
+            ]
+          },
+          {
+            name: "Customer & Brand Engagement",
+            processes: [
+              "Loyalty Program Points Calculation & Redemption",
+              "Trade Fair/Exhibition Participation",
+              "Product Photography & Catalogue Production",
+              "School Milk Program Coordination",
+              "Dealer Credit Limit Review & Adjustment",
+              "Product Damage/Expiry Write-Off Processing",
+              "Media/Press Release Publication",
+              "Competitor Product Benchmarking Study",
+              "Sales Team Weekly Performance Review Meeting",
+              "New Market Area Mapping & Demand Assessment"
+            ]
+          },
+          {
+            name: "Strategic Sales",
+            processes: [
+              "Highland Brand Ambassador Program Management",
+              "Point-of-Sale Material Design & Distribution",
+              "Customer Database Segmentation & Targeting",
+              "Sales Route Profitability Analysis",
+              "Product Cross-Selling Strategy Development",
+              "Annual Sales Awards Ceremony Planning",
+              "Digital Marketing ROI Analysis & Reporting",
+              "Quarterly Market Report to Board of Directors"
+            ]
+          }
+        ]
+      },
+      5: {
+        name: "Finance & Accounting",
+        shortName: "Finance",
+        owner: "Member 5",
+        color: "#ef4444",
+        categories: [
+          {
+            name: "Financial Accounting",
+            processes: [
+              "Daily Cash Receipts Recording & Banking",
+              "Accounts Payable Invoice Processing",
+              "Accounts Receivable Aging & Follow-Up",
+              "Bank Reconciliation (Multiple Accounts)",
+              "Monthly General Ledger Closing",
+              "Fixed Asset Register Maintenance",
+              "Depreciation Calculation & Posting",
+              "Petty Cash Management & Reimbursement",
+              "Inter-Company/Inter-Factory Transfer Accounting",
+              "Year-End Financial Statement Preparation"
+            ]
+          },
+          {
+            name: "Cost & Management Accounting",
+            processes: [
+              "Production Cost Center Allocation",
+              "Farmer Milk Payment Calculation & Disbursement",
+              "Standard Costing vs. Actual Cost Variance",
+              "Product-Wise Profitability Analysis",
+              "Factory Overhead Absorption Rate Calculation",
+              "Capital Expenditure (CAPEX) Proposal Evaluation",
+              "Annual Budget Preparation",
+              "Monthly Budget vs. Actual Reporting",
+              "Break-Even Analysis for Product Lines"
+            ]
+          },
+          {
+            name: "Treasury & Government Reporting",
+            processes: [
+              "Government Treasury Fund Management",
+              "EPF/ETF Statutory Deduction & Remittance",
+              "PAYE Tax Calculation & Filing",
+              "VAT/Tax Invoice Preparation & Filing",
+              "Withholding Tax Compliance",
+              "Auditor General Annual Audit Facilitation",
+              "Ministry of Finance SOE Performance Return",
+              "Foreign Currency Transaction Management (Import)",
+              "Bank Loan/Overdraft Facility Management"
+            ]
+          },
+          {
+            name: "Financial Controls & Compliance",
+            processes: [
+              "Internal Audit Schedule & Execution",
+              "Fraud Risk Assessment & Monitoring",
+              "Procurement Payment Authorization Workflow",
+              "Travel Advance & Expense Claim Settlement",
+              "Insurance Premium Management & Claim Processing",
+              "Financial KPI Dashboard Generation",
+              "Cash Flow Forecasting & Liquidity Management",
+              "Government Grant/Subsidy Accounting",
+              "Financial Data Backup & Disaster Recovery",
+              "Annual Financial Planning Committee Meeting"
+            ]
+          },
+          {
+            name: "Government SOE Finance",
+            processes: [
+              "Employee Salary Advance Recovery Tracking",
+              "Government Subsidy/Grant Claim Preparation",
+              "Foreign Currency Import Payment (LC) Processing",
+              "Revenue Stamp & Stamp Duty Compliance",
+              "Financial System User Access Control Management",
+              "Credit Note/Debit Note Processing",
+              "Investment Portfolio Monitoring (Fixed Deposits)",
+              "Financial Year Opening Balance Verification",
+              "Inter-Factory Fund Transfer Reconciliation",
+              "Monthly Management Accounts Preparation"
+            ]
+          },
+          {
+            name: "Specialized Finance",
+            processes: [
+              "Farmer Payment Batch Processing (14,500 farmers)",
+              "Sundry Creditor Aging Analysis & Settlement",
+              "Revenue Recognition Policy Implementation",
+              "Procurement Float Advance Accounting",
+              "Government Performance Report (SOE Metrics)",
+              "Annual Financial Audit Preparation (Auditor General)",
+              "Cost Reduction Initiative Tracking & Reporting",
+              "Quarterly Financial Forecast Revision"
+            ]
+          }
+        ]
+      },
+      6: {
+        name: "Human Resources & Administration",
+        shortName: "HR",
+        owner: "Member 6",
+        color: "#a855f7",
+        categories: [
+          {
+            name: "Recruitment & Onboarding",
+            processes: [
+              "Manpower Requisition & Vacancy Approval",
+              "Job Advertisement Publication (Gazette/Media)",
+              "Application Screening & Shortlisting",
+              "Interview Panel Formation & Scheduling",
+              "Candidate Selection & Offer Letter Issuance",
+              "New Employee Onboarding & Induction Program",
+              "Probation Period Monitoring & Confirmation",
+              "Employee ID Card & Access Credential Issuance"
+            ]
+          },
+          {
+            name: "Payroll & Compensation",
+            processes: [
+              "Monthly Attendance & Leave Recording",
+              "Overtime Calculation & Approval",
+              "Monthly Salary Processing & Payslip Generation",
+              "EPF/ETF Employer Contribution Processing",
+              "Annual Increment Processing",
+              "Employee Loan & Advance Management",
+              "Gratuity Calculation & Settlement",
+              "Staff Uniform & PPE Issuance"
+            ]
+          },
+          {
+            name: "Training & Development",
+            processes: [
+              "Annual Training Needs Assessment",
+              "External Training Program Nomination",
+              "In-House Workshop/Seminar Organization",
+              "Food Safety Training Compliance Tracking",
+              "Employee Performance Appraisal Cycle",
+              "Succession Planning & Career Path Development",
+              "Employee Skills Gap Analysis",
+              "Training Effectiveness Evaluation"
+            ]
+          },
+          {
+            name: "Employee Relations & Welfare",
+            processes: [
+              "Employee Grievance Handling Procedure",
+              "Disciplinary Inquiry & Action Processing",
+              "Trade Union Consultation & Negotiation",
+              "Employee Welfare Festival/Event Organization",
+              "Employee Health Screening Program",
+              "Retirement/Resignation Processing & Exit Interview",
+              "Staff Quarters/Housing Allocation Management",
+              "Employee Transfer Between Factories"
+            ]
+          },
+          {
+            name: "Administration",
+            processes: [
+              "Office Equipment & Furniture Requisition",
+              "Security & Access Control System Management",
+              "Visitor Registration & Factory Tour Coordination",
+              "Annual HR Policy Review & Update",
+              "Employee Data/Records Management (HRIS)",
+              "General Administration File & Correspondence"
+            ]
+          },
+          {
+            name: "Workplace Safety & Compliance",
+            processes: [
+              "Workplace Accident Investigation & Reporting",
+              "Health & Safety Committee Meeting Coordination",
+              "Fire Warden Training & Certification",
+              "Canteen/Cafeteria Operations Management",
+              "Staff Transport Arrangement Coordination",
+              "Employee Suggestion Scheme Administration",
+              "Contract/Temporary Staff Engagement Processing",
+              "Annual Leave Balance Reconciliation",
+              "Employee Housing Loan Guarantee Processing",
+              "Anti-Harassment Policy Training & Awareness"
+            ]
+          },
+          {
+            name: "Advanced HR",
+            processes: [
+              "Union Collective Bargaining Agreement Administration",
+              "Factory Medical Room Equipment Management",
+              "Employee Scholarship Program Administration",
+              "Workmen's Compensation Claim Processing",
+              "Employee ID Card Renewal Processing",
+              "Annual Staff Performance Award Selection",
+              "HRIS Data Update & Validation",
+              "Organizational Structure Review & Position Mapping"
+            ]
+          }
+        ]
+      }
+    };
+
+    function buildProcessFlow(processName, deptId) {
+      let steps = [];
+      steps.push({ type: "start", text: `Start: Initiate ${processName} sequence` });
+      
+      if (deptId === 4) { // Sales
+        steps.push({ type: "input", text: "Receive marketing campaign parameters or distributor order details" });
+        steps.push({ type: "action", text: "Validate against regional sales quotas & Highland brand guidelines" });
+        steps.push({ type: "action", text: "Coordinate with logistics for cold-chain route availability" });
+        steps.push({ type: "decision", text: "Are dealer credit lines and stock levels verified?", yes: "Release sales invoice and dispatch goods from warehouse", no: "Place order on hold and request payment clearance from Finance" });
+        steps.push({ type: "action", text: "Update regional market share and sales metrics database" });
+        steps.push({ type: "output", text: "Deliver invoice & sales performance summary report to Management" });
+      } 
+      else if (deptId === 5) { // Finance
+        steps.push({ type: "input", text: "Acquire invoice matching metadata or payment voucher vouchers" });
+        steps.push({ type: "action", text: "Verify government treasury rules & stamp duty compliance" });
+        steps.push({ type: "action", text: "Execute double-entry ledger reconciliation against bank statements" });
+        steps.push({ type: "decision", text: "Does internal audit confirm budget compliance?", yes: "Approve transaction and disburse funds via bank transfer", no: "Flag for financial steering committee review & budget adjustment" });
+        steps.push({ type: "action", text: "Log transactions into central ERP financial ledger" });
+        steps.push({ type: "output", text: "Provide updated balance sheet & monthly expenditure report to Auditor General" });
+      } 
+      else { // HR
+        steps.push({ type: "input", text: "Collect employee requisition forms or leave/attendance records" });
+        steps.push({ type: "action", text: "Verify against government service rules and union agreements" });
+        steps.push({ type: "action", text: "Conduct verification audits and update the HRIS employee database" });
+        steps.push({ type: "decision", text: "Does employee profile pass standard background & medical tests?", yes: "Issue confirmation letter or process monthly payout benefits", no: "Notify employee and trigger performance management protocol" });
+        steps.push({ type: "action", text: "Update safety and ISO food safety training certification logs" });
+        steps.push({ type: "output", text: "Generate official payslips and HR metrics report for factory management" });
+      }
+
+      steps.push({ type: "end", text: `End: ${processName} records archived and finalized` });
+      return steps;
+    }
+
+    function generateComment(processName) {
+      return `BPM process approved for Milco Group presentation. Complies with Sri Lankan government regulations for SOEs and Auditor General audit checklists.`;
+    }
+
+    function loadDepartment() {
+      const deptId = document.getElementById("deptSelect").value;
+      const dept = departments[deptId];
+      
+      document.getElementById("deptLabel").innerText = dept.shortName;
+      document.getElementById("ownerLabel").innerText = dept.owner;
+      
+      const main = document.getElementById("processList");
+      main.innerHTML = "";
+      
+      let index = 1;
+      dept.categories.forEach(cat => {
+        const catGroup = document.createElement("div");
+        catGroup.className = "category-group";
+        
+        const catTitle = document.createElement("div");
+        catTitle.className = "category-title";
+        catTitle.innerText = cat.name;
+        catGroup.appendChild(catTitle);
+        
+        cat.processes.forEach(proc => {
+          const card = document.createElement("div");
+          card.className = "process-card";
+          card.id = `proc-${index}`;
+          
+          const header = document.createElement("div");
+          header.className = "process-header";
+          header.onclick = () => card.classList.toggle("expanded");
+          
+          const titleGroup = document.createElement("div");
+          titleGroup.className = "process-title-group";
+          
+          const diagNum = document.createElement("span");
+          diagNum.className = "diag-num";
+          diagNum.innerText = `D-${deptId}.${index.toString().padStart(2, '0')}`;
+          
+          const procName = document.createElement("span");
+          procName.className = "process-name";
+          procName.innerText = proc;
+          
+          titleGroup.appendChild(diagNum);
+          titleGroup.appendChild(procName);
+          
+          const toggle = document.createElement("span");
+          toggle.className = "toggle-icon";
+          toggle.innerText = "▼";
+          
+          header.appendChild(titleGroup);
+          header.appendChild(toggle);
+          card.appendChild(header);
+          
+          const content = document.createElement("div");
+          content.className = "process-content";
+          
+          const flowContainer = document.createElement("div");
+          flowContainer.className = "flowchart-container";
+          
+          const steps = buildProcessFlow(proc, parseInt(deptId));
+          
+          steps.forEach((step, sIdx) => {
+            const node = document.createElement("div");
+            node.className = `flow-node node-${step.type}`;
+            node.innerHTML = `<span>${step.text}</span>`;
+            flowContainer.appendChild(node);
+            
+            if (step.type === "decision") {
+              const branches = document.createElement("div");
+              branches.className = "decision-branches";
+              branches.innerHTML = `<span>[YES] ➔ ${step.yes}</span><span>[NO] ➔ ${step.no}</span>`;
+              flowContainer.appendChild(branches);
+            }
+            
+            if (sIdx < steps.length - 1) {
+              const arrow = document.createElement("div");
+              arrow.className = "flow-arrow";
+              flowContainer.appendChild(arrow);
+            }
+          });
+          
+          content.appendChild(flowContainer);
+          
+          const comment = document.createElement("div");
+          comment.className = "comment-box";
+          comment.innerHTML = `<strong>Comment:</strong> ${generateComment(proc)}`;
+          content.appendChild(comment);
+          
+          card.appendChild(content);
+          catGroup.appendChild(card);
+          index++;
+        });
+        
+        main.appendChild(catGroup);
+      });
+    }
+
+    window.onload = loadDepartment;
+  </script>
+</body>
+</html>
