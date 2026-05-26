@@ -98,9 +98,20 @@
       letter-spacing: 0.05em;
     }
 
+    .info-banner {
+      background: rgba(59, 130, 246, 0.1);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+      padding: 0.75rem 3rem;
+      font-size: 0.9rem;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
     /* Train Track and Journey System */
     .train-container {
-      padding: 4rem 3rem;
+      padding: 3rem 3rem;
       overflow-x: auto;
       white-space: nowrap;
       scroll-behavior: smooth;
@@ -111,7 +122,7 @@
       position: absolute;
       bottom: 75px;
       left: 0;
-      width: 4000px;
+      width: 4400px;
       height: 8px;
       background: linear-gradient(90deg, #334155 0%, #1e293b 100%);
       border-radius: 4px;
@@ -215,6 +226,21 @@
       border-radius: 4px;
     }
 
+    .chain-label {
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
     .carriage-header {
       display: flex;
       justify-content: space-between;
@@ -311,6 +337,20 @@
       margin: 0 auto;
     }
 
+    .map-btn {
+      display: inline-block;
+      background: #8b5cf6;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.75rem 1.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      transition: background 0.2s;
+    }
+
+    .map-btn:hover { background: #7c3aed; }
+
     /* Animation frames */
     @keyframes steamBlow {
       0% { transform: translate(-50%, 0) scale(0.8); opacity: 0; }
@@ -347,6 +387,10 @@
     </div>
   </header>
 
+  <div class="info-banner">
+    <strong>💡 Presentation Sequence Strategy:</strong> The sequence is structured as a continuous running lifecycle. It begins with the physical flow of our core product (from Farm to Market) and concludes with the corporate support backbone that empowers the entire operation.
+  </div>
+
   <div class="train-container">
     <div class="train-track"></div>
     <div class="train-assembly">
@@ -358,7 +402,7 @@
           <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Milco Express</span>
           <h2 class="locomotive-title">Pattipola Engine 09</h2>
         </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Sri Lanka Dairy Sector Backbone</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Driving the Value Chain</p>
         <div class="carriage-wheels">
           <div class="wheel"></div>
           <div class="wheel"></div>
@@ -368,14 +412,15 @@
 
       <div class="carriage-connector"></div>
 
-      <!-- Carriage 1 (DD&MP) -->
+      <!-- SEQUENCE 1: DD&MP (Mem 1) - Raw Milk Sourcing -->
       <div class="carriage" onclick="boardCarriage(1)" style="border-color: var(--color-m1);">
+        <div class="chain-label">1. Core Supply (Inflow)</div>
         <div class="carriage-header">
           <span class="carriage-icon">🥛</span>
           <span class="carriage-num">CAR 01</span>
         </div>
         <h3 class="carriage-title" style="color: var(--color-m1);">Milk Procurement</h3>
-        <p class="carriage-owner">Member 1 | 56 Processes</p>
+        <p class="carriage-owner">Member 1 | Farmer network & collection</p>
         <div class="carriage-wheels">
           <div class="wheel"></div>
           <div class="wheel"></div>
@@ -384,30 +429,15 @@
 
       <div class="carriage-connector"></div>
 
-      <!-- Carriage 2 (Production) -->
-      <div class="carriage" onclick="boardCarriage(2)" style="border-color: var(--color-m2);">
-        <div class="carriage-header">
-          <span class="carriage-icon">🏭</span>
-          <span class="carriage-num">CAR 02</span>
-        </div>
-        <h3 class="carriage-title" style="color: var(--color-m2);">Factory Production</h3>
-        <p class="carriage-owner">Member 2 | 56 Processes</p>
-        <div class="carriage-wheels">
-          <div class="wheel"></div>
-          <div class="wheel"></div>
-        </div>
-      </div>
-
-      <div class="carriage-connector"></div>
-
-      <!-- Carriage 3 (QA) -->
+      <!-- SEQUENCE 2: QA (Mem 3) - Testing incoming milk -->
       <div class="carriage" onclick="boardCarriage(3)" style="border-color: var(--color-m3);">
+        <div class="chain-label">2. Quality Gate</div>
         <div class="carriage-header">
           <span class="carriage-icon">🔬</span>
           <span class="carriage-num">CAR 03</span>
         </div>
         <h3 class="carriage-title" style="color: var(--color-m3);">QA & Lab R&D</h3>
-        <p class="carriage-owner">Member 3 | 56 Processes</p>
+        <p class="carriage-owner">Member 3 | Pre/Post-production testing</p>
         <div class="carriage-wheels">
           <div class="wheel"></div>
           <div class="wheel"></div>
@@ -416,14 +446,15 @@
 
       <div class="carriage-connector"></div>
 
-      <!-- Carriage 4 (Sales) -->
-      <div class="carriage" onclick="boardCarriage(4)" style="border-color: var(--color-m4);">
+      <!-- SEQUENCE 3: Production (Mem 2) - Value Addition -->
+      <div class="carriage" onclick="boardCarriage(2)" style="border-color: var(--color-m2);">
+        <div class="chain-label">3. Processing (Value Addition)</div>
         <div class="carriage-header">
-          <span class="carriage-icon">📊</span>
-          <span class="carriage-num">CAR 04</span>
+          <span class="carriage-icon">🏭</span>
+          <span class="carriage-num">CAR 02</span>
         </div>
-        <h3 class="carriage-title" style="color: var(--color-m4);">Sales & Marketing</h3>
-        <p class="carriage-owner">Member 4 | 56 Processes</p>
+        <h3 class="carriage-title" style="color: var(--color-m2);">Factory Production</h3>
+        <p class="carriage-owner">Member 2 | Powder & Butter manufacturing</p>
         <div class="carriage-wheels">
           <div class="wheel"></div>
           <div class="wheel"></div>
@@ -432,62 +463,15 @@
 
       <div class="carriage-connector"></div>
 
-      <!-- Carriage 5 (Finance) -->
-      <div class="carriage" onclick="boardCarriage(5)" style="border-color: var(--color-m5);">
-        <div class="carriage-header">
-          <span class="carriage-icon">💰</span>
-          <span class="carriage-num">CAR 05</span>
-        </div>
-        <h3 class="carriage-title" style="color: var(--color-m5);">Finance & Accounts</h3>
-        <p class="carriage-owner">Member 5 | 56 Processes</p>
-        <div class="carriage-wheels">
-          <div class="wheel"></div>
-          <div class="wheel"></div>
-        </div>
-      </div>
-
-      <div class="carriage-connector"></div>
-
-      <!-- Carriage 6 (HR) -->
-      <div class="carriage" onclick="boardCarriage(6)" style="border-color: var(--color-m6);">
-        <div class="carriage-header">
-          <span class="carriage-icon">👥</span>
-          <span class="carriage-num">CAR 06</span>
-        </div>
-        <h3 class="carriage-title" style="color: var(--color-m6);">HR & Administration</h3>
-        <p class="carriage-owner">Member 6 | 56 Processes</p>
-        <div class="carriage-wheels">
-          <div class="wheel"></div>
-          <div class="wheel"></div>
-        </div>
-      </div>
-
-      <div class="carriage-connector"></div>
-
-      <!-- Carriage 7 (Engineering) -->
-      <div class="carriage" onclick="boardCarriage(7)" style="border-color: var(--color-m7);">
-        <div class="carriage-header">
-          <span class="carriage-icon">⚙️</span>
-          <span class="carriage-num">CAR 07</span>
-        </div>
-        <h3 class="carriage-title" style="color: var(--color-m7);">Engineering & Projects</h3>
-        <p class="carriage-owner">Member 7 | 56 Processes</p>
-        <div class="carriage-wheels">
-          <div class="wheel"></div>
-          <div class="wheel"></div>
-        </div>
-      </div>
-
-      <div class="carriage-connector"></div>
-
-      <!-- Carriage 8 (Transport) -->
+      <!-- SEQUENCE 4: Transport (Mem 8) - Outbound Logistics -->
       <div class="carriage" onclick="boardCarriage(8)" style="border-color: var(--color-m8);">
+        <div class="chain-label">4. Post-Operations (Dispatch)</div>
         <div class="carriage-header">
           <span class="carriage-icon">🚛</span>
           <span class="carriage-num">CAR 08</span>
         </div>
         <h3 class="carriage-title" style="color: var(--color-m8);">Logistics & Fleet</h3>
-        <p class="carriage-owner">Member 8 | 56 Processes</p>
+        <p class="carriage-owner">Member 8 | Warehousing & Distribution</p>
         <div class="carriage-wheels">
           <div class="wheel"></div>
           <div class="wheel"></div>
@@ -496,14 +480,83 @@
 
       <div class="carriage-connector"></div>
 
-      <!-- Carriage 9 (Procurement) -->
+      <!-- SEQUENCE 5: Sales (Mem 4) - Market Hit -->
+      <div class="carriage" onclick="boardCarriage(4)" style="border-color: var(--color-m4);">
+        <div class="chain-label">5. Market Integration</div>
+        <div class="carriage-header">
+          <span class="carriage-icon">📊</span>
+          <span class="carriage-num">CAR 04</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m4);">Sales & Marketing</h3>
+        <p class="carriage-owner">Member 4 | Selling finished goods</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- SEQUENCE 6: Engineering (Mem 7) - Keeping machines running -->
+      <div class="carriage" onclick="boardCarriage(7)" style="border-color: var(--color-m7);">
+        <div class="chain-label">6. Operational Support</div>
+        <div class="carriage-header">
+          <span class="carriage-icon">⚙️</span>
+          <span class="carriage-num">CAR 07</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m7);">Project Engineering</h3>
+        <p class="carriage-owner">Member 7 | Maintenance & Utilities</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- SEQUENCE 7: Procurement & Stores (Mem 9) - Supply Chain -->
       <div class="carriage" onclick="boardCarriage(9)" style="border-color: var(--color-m9);">
+        <div class="chain-label">7. Supply Chain Support</div>
         <div class="carriage-header">
           <span class="carriage-icon">📦</span>
           <span class="carriage-num">CAR 09</span>
         </div>
         <h3 class="carriage-title" style="color: var(--color-m9);">Stores & Procurement</h3>
-        <p class="carriage-owner">Member 9 | 56 Processes</p>
+        <p class="carriage-owner">Member 9 | Continuous inputs supply</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- SEQUENCE 8: Finance (Mem 5) - Money Flow -->
+      <div class="carriage" onclick="boardCarriage(5)" style="border-color: var(--color-m5);">
+        <div class="chain-label">8. Administrative Support</div>
+        <div class="carriage-header">
+          <span class="carriage-icon">💰</span>
+          <span class="carriage-num">CAR 05</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m5);">Finance & Accounts</h3>
+        <p class="carriage-owner">Member 5 | Revenue & Farmer payouts</p>
+        <div class="carriage-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+      <div class="carriage-connector"></div>
+
+      <!-- SEQUENCE 9: HR (Mem 6) - People Management -->
+      <div class="carriage" onclick="boardCarriage(6)" style="border-color: var(--color-m6);">
+        <div class="chain-label">9. Corporate Support</div>
+        <div class="carriage-header">
+          <span class="carriage-icon">👥</span>
+          <span class="carriage-num">CAR 06</span>
+        </div>
+        <h3 class="carriage-title" style="color: var(--color-m6);">HR & Administration</h3>
+        <p class="carriage-owner">Member 6 | Managing all factory staff</p>
         <div class="carriage-wheels">
           <div class="wheel"></div>
           <div class="wheel"></div>
@@ -529,15 +582,15 @@
 
   <script>
     const carriageData = {
-      1: { title: "Dairy Development & Milk Procurement", member: "Member 1", link: "members_1_2_3.html" },
-      2: { title: "Production & Factory Operations", member: "Member 2", link: "members_1_2_3.html" },
-      3: { title: "Quality Assurance & R&D Lab", member: "Member 3", link: "members_1_2_3.html" },
-      4: { title: "Sales & Marketing", member: "Member 4", link: "members_4_5_6.html" },
-      5: { title: "Finance & Accounting", member: "Member 5", link: "members_4_5_6.html" },
-      6: { title: "HR & General Administration", member: "Member 6", link: "members_4_5_6.html" },
-      7: { title: "Project Engineering & Maintenance", member: "Member 7", link: "members_7_8_9.html" },
-      8: { title: "Transport & Logistics", member: "Member 8", link: "members_7_8_9.html" },
-      9: { title: "Procurement & Stores", member: "Member 9", link: "members_7_8_9.html" }
+      1: { title: "Dairy Development & Milk Procurement", member: "Member 1", link: "../AS_08/members_1_2_3.html" },
+      2: { title: "Production & Factory Operations", member: "Member 2", link: "../AS_08/members_1_2_3.html" },
+      3: { title: "Quality Assurance & R&D Lab", member: "Member 3", link: "../AS_08/members_1_2_3.html" },
+      4: { title: "Sales & Marketing", member: "Member 4", link: "../AS_08/members_4_5_6.html" },
+      5: { title: "Finance & Accounting", member: "Member 5", link: "../AS_08/members_4_5_6.html" },
+      6: { title: "HR & General Administration", member: "Member 6", link: "../AS_08/members_4_5_6.html" },
+      7: { title: "Project Engineering & Maintenance", member: "Member 7", link: "../AS_08/members_7_8_9.html" },
+      8: { title: "Transport & Logistics", member: "Member 8", link: "../AS_08/members_7_8_9.html" },
+      9: { title: "Procurement & Stores", member: "Member 9", link: "../AS_08/members_7_8_9.html" }
     };
 
     function boardCarriage(id) {
@@ -554,6 +607,10 @@
           </p>
           <a href="${data.link}" target="_blank" style="display: inline-block; background: #3b82f6; color: #fff; text-decoration: none; padding: 0.75rem 1.75rem; border-radius: 0.5rem; font-weight: 600;">
             Open Interactive Database & Flowcharts
+          </a>
+          <br>
+          <a href="../AS_08/dept${id}_map.html" target="_blank" class="map-btn">
+            View Macro Network Interaction Map
           </a>
         </div>
       `;
