@@ -1,0 +1,394 @@
+<!-- created the department map 7 html file -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Engineering & Maint - Macro Interaction Map</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+    #header {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 1.5rem 2rem;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1e293b;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #6b7280;
+    }
+    p {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+    .btn {
+      background: #1e293b;
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid #334155;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #334155; }
+    #mynetwork {
+      width: 100vw;
+      height: 100vh;
+    }
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #1e293b;
+      z-index: 10;
+      font-size: 0.85rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .legend-color {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      margin-right: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header">
+    <div>
+      <h1>Project Engineering & Maint</h1>
+      <p>Full 56-Process Intra & Inter-Departmental Network Map</p>
+    </div>
+    <div>
+      <a href="../AS_07/index.html" class="btn">Return to Train Hub</a>
+    </div>
+  </div>
+
+  <div id="mynetwork"></div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-color" style="background: #6b7280;"></div>
+      <span>Category Hub</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #0f172a; border: 1px solid #6b7280;"></div>
+      <span>Internal Process</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #1e293b; border: 1px solid #475569; border-radius: 50%;"></div>
+      <span>External Department</span>
+    </div>
+    <div class="legend-item" style="margin-top: 10px;">
+      <div style="width: 20px; height: 2px; background: #6b7280; margin-right: 8px;"></div>
+      <span>Internal Flow</span>
+    </div>
+    <div class="legend-item">
+      <div style="width: 20px; height: 2px; border-bottom: 2px dashed #f59e0b; margin-right: 8px;"></div>
+      <span>External Handoff (Loophole Fix)</span>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var nodes = new vis.DataSet([
+      { id: 1001, label: "EXT: DD&MP", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1002, label: "EXT: Production", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1003, label: "EXT: QA & R&D", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1004, label: "EXT: Sales", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1005, label: "EXT: Finance", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1006, label: "EXT: HR", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1008, label: "EXT: Transport", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1009, label: "EXT: Procurement", shape: 'hexagon', color: { background: '#1e293b', border: '#475569' }, font: { color: '#ffffff' }, size: 25 },
+      { id: 1, label: "CAT:\nPreventive Maint", shape: 'diamond', color: { background: '#6b7280', border: '#fff' }, font: { color: '#ffffff', size: 16 }, size: 20 },
+      { id: 2, label: "Spray Dryer Maint", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 3, label: "Evaporator Cleaning", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 4, label: "Pasteurizer Maint", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 5, label: "Boiler Cert", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 6, label: "Compressor Maint", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 7, label: "Electrical Panel", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 8, label: "CIP Pump Maint", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 9, label: "Piping Integrity", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 10, label: "Calibration", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 11, label: "Fire Safety", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 12, label: "CAT:\nCorrective Maint", shape: 'diamond', color: { background: '#6b7280', border: '#fff' }, font: { color: '#ffffff', size: 16 }, size: 20 },
+      { id: 13, label: "Emergency Breakdown", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 14, label: "Spare Part Req", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 15, label: "Fault Diagnosis", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 16, label: "Post-Repair Test", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 17, label: "Root Cause Doc", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 18, label: "Contractor Engage", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 19, label: "Backlog Review", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 20, label: "CAT:\nProjects", shape: 'diamond', color: { background: '#6b7280', border: '#fff' }, font: { color: '#ffffff', size: 16 }, size: 20 },
+      { id: 21, label: "CAPEX Proposal", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 22, label: "Design Review", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 23, label: "Tender BOQ", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 24, label: "Contractor Selection", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 25, label: "Installation Super", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 26, label: "Progress Monitor", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 27, label: "Commissioning", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 28, label: "Post-Project Eval", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 29, label: "CAT:\nUtilities", shape: 'diamond', color: { background: '#6b7280', border: '#fff' }, font: { color: '#ffffff', size: 16 }, size: 20 },
+      { id: 30, label: "Power Supply Monitor", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 31, label: "Fuel Stock Mgmt", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 32, label: "Water Treatment", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 33, label: "Generator Test", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 34, label: "Solar Monitor", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 35, label: "Energy Audit", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 36, label: "Emission Report", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 37, label: "CAT:\nWorkshop", shape: 'diamond', color: { background: '#6b7280', border: '#fff' }, font: { color: '#ffffff', size: 16 }, size: 20 },
+      { id: 38, label: "Tool Inventory", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 39, label: "Welding Job", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 40, label: "Building Maint", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 41, label: "Layout Planning", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 42, label: "MTBF Report", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 43, label: "Maint Budget", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 44, label: "CAT:\nAdvanced", shape: 'diamond', color: { background: '#6b7280', border: '#fff' }, font: { color: '#ffffff', size: 16 }, size: 20 },
+      { id: 45, label: "SCADA Update", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 46, label: "Air Quality Test", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 47, label: "Elevator Cert", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 48, label: "Roof Inspect", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 49, label: "Lightning Verify", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 50, label: "Crane Load Test", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 51, label: "Tank Integrity", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 52, label: "Drainage Maint", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 53, label: "Filter Replace", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 54, label: "Vibration Analysis", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 55, label: "CAT:\nCompliance", shape: 'diamond', color: { background: '#6b7280', border: '#fff' }, font: { color: '#ffffff', size: 16 }, size: 20 },
+      { id: 56, label: "Earthing Test", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 57, label: "Power Switchover", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 58, label: "Signage Refresh", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 59, label: "Insulation Assess", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 60, label: "HVAC Comm", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 61, label: "As-Built Update", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 62, label: "Safety Permit", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 },
+      { id: 63, label: "Strategy Review", shape: 'box', color: { background: '#0f172a', border: '#6b7280' }, font: { color: '#cbd5e1' }, margin: 10 }
+    ]);
+
+    var edges = new vis.DataSet([
+      { from: 1, to: 2, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 2, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 3, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 2, to: 3, arrows: 'to', color: { color: '#334155' } },
+      { from: 3, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 4, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 3, to: 4, arrows: 'to', color: { color: '#334155' } },
+      { from: 4, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 5, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 4, to: 5, arrows: 'to', color: { color: '#334155' } },
+      { from: 5, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 6, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 5, to: 6, arrows: 'to', color: { color: '#334155' } },
+      { from: 6, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 7, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 6, to: 7, arrows: 'to', color: { color: '#334155' } },
+      { from: 7, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 8, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 7, to: 8, arrows: 'to', color: { color: '#334155' } },
+      { from: 8, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 9, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 8, to: 9, arrows: 'to', color: { color: '#334155' } },
+      { from: 9, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 10, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 9, to: 10, arrows: 'to', color: { color: '#334155' } },
+      { from: 10, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 1, to: 11, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 10, to: 11, arrows: 'to', color: { color: '#334155' } },
+      { from: 11, to: 1006, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 1, to: 12, dashes: true, color: { color: '#475569' } },
+      { from: 12, to: 13, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 13, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 12, to: 14, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 13, to: 14, arrows: 'to', color: { color: '#334155' } },
+      { from: 14, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 12, to: 15, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 14, to: 15, arrows: 'to', color: { color: '#334155' } },
+      { from: 15, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 12, to: 16, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 15, to: 16, arrows: 'to', color: { color: '#334155' } },
+      { from: 16, to: 1003, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 12, to: 17, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 16, to: 17, arrows: 'to', color: { color: '#334155' } },
+      { from: 17, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 12, to: 18, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 17, to: 18, arrows: 'to', color: { color: '#334155' } },
+      { from: 18, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 12, to: 19, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 18, to: 19, arrows: 'to', color: { color: '#334155' } },
+      { from: 19, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 12, to: 20, dashes: true, color: { color: '#475569' } },
+      { from: 20, to: 21, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 21, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 22, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 21, to: 22, arrows: 'to', color: { color: '#334155' } },
+      { from: 22, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 23, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 22, to: 23, arrows: 'to', color: { color: '#334155' } },
+      { from: 23, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 24, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 23, to: 24, arrows: 'to', color: { color: '#334155' } },
+      { from: 24, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 25, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 24, to: 25, arrows: 'to', color: { color: '#334155' } },
+      { from: 25, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 26, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 25, to: 26, arrows: 'to', color: { color: '#334155' } },
+      { from: 26, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 27, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 26, to: 27, arrows: 'to', color: { color: '#334155' } },
+      { from: 27, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 28, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 27, to: 28, arrows: 'to', color: { color: '#334155' } },
+      { from: 28, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 20, to: 29, dashes: true, color: { color: '#475569' } },
+      { from: 29, to: 30, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 30, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 29, to: 31, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 30, to: 31, arrows: 'to', color: { color: '#334155' } },
+      { from: 31, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 29, to: 32, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 31, to: 32, arrows: 'to', color: { color: '#334155' } },
+      { from: 32, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 29, to: 33, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 32, to: 33, arrows: 'to', color: { color: '#334155' } },
+      { from: 33, to: 1003, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 29, to: 34, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 33, to: 34, arrows: 'to', color: { color: '#334155' } },
+      { from: 34, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 29, to: 35, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 34, to: 35, arrows: 'to', color: { color: '#334155' } },
+      { from: 35, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 29, to: 36, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 35, to: 36, arrows: 'to', color: { color: '#334155' } },
+      { from: 36, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 29, to: 37, dashes: true, color: { color: '#475569' } },
+      { from: 37, to: 38, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 38, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 37, to: 39, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 38, to: 39, arrows: 'to', color: { color: '#334155' } },
+      { from: 39, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 37, to: 40, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 39, to: 40, arrows: 'to', color: { color: '#334155' } },
+      { from: 40, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 37, to: 41, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 40, to: 41, arrows: 'to', color: { color: '#334155' } },
+      { from: 41, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 37, to: 42, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 41, to: 42, arrows: 'to', color: { color: '#334155' } },
+      { from: 42, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 37, to: 43, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 42, to: 43, arrows: 'to', color: { color: '#334155' } },
+      { from: 43, to: 1005, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 37, to: 44, dashes: true, color: { color: '#475569' } },
+      { from: 44, to: 45, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 45, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 46, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 45, to: 46, arrows: 'to', color: { color: '#334155' } },
+      { from: 46, to: 1003, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 46, to: 1003, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 44, to: 47, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 46, to: 47, arrows: 'to', color: { color: '#334155' } },
+      { from: 47, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 48, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 47, to: 48, arrows: 'to', color: { color: '#334155' } },
+      { from: 48, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 49, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 48, to: 49, arrows: 'to', color: { color: '#334155' } },
+      { from: 49, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 50, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 49, to: 50, arrows: 'to', color: { color: '#334155' } },
+      { from: 50, to: 1003, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 44, to: 51, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 50, to: 51, arrows: 'to', color: { color: '#334155' } },
+      { from: 51, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 52, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 51, to: 52, arrows: 'to', color: { color: '#334155' } },
+      { from: 52, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 53, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 52, to: 53, arrows: 'to', color: { color: '#334155' } },
+      { from: 53, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 54, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 53, to: 54, arrows: 'to', color: { color: '#334155' } },
+      { from: 54, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 44, to: 55, dashes: true, color: { color: '#475569' } },
+      { from: 55, to: 56, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 56, to: 1003, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 55, to: 57, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 56, to: 57, arrows: 'to', color: { color: '#334155' } },
+      { from: 57, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 55, to: 58, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 57, to: 58, arrows: 'to', color: { color: '#334155' } },
+      { from: 58, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 55, to: 59, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 58, to: 59, arrows: 'to', color: { color: '#334155' } },
+      { from: 59, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 55, to: 60, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 59, to: 60, arrows: 'to', color: { color: '#334155' } },
+      { from: 60, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 55, to: 61, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 60, to: 61, arrows: 'to', color: { color: '#334155' } },
+      { from: 61, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } },
+      { from: 55, to: 62, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 61, to: 62, arrows: 'to', color: { color: '#334155' } },
+      { from: 62, to: 1006, arrows: 'to', dashes: true, color: { color: '#f59e0b', opacity: 0.5 } },
+      { from: 55, to: 63, arrows: 'to', color: { color: '#6b7280' } },
+      { from: 62, to: 63, arrows: 'to', color: { color: '#334155' } },
+      { from: 63, to: 1005, arrows: 'to, from', dashes: true, color: { color: '#64748b', opacity: 0.3 } }
+    ]);
+
+    var container = document.getElementById('mynetwork');
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+    var options = {
+      physics: {
+        forceAtlas2Based: {
+          gravitationalConstant: -100,
+          centralGravity: 0.005,
+          springLength: 150,
+          springConstant: 0.05
+        },
+        maxVelocity: 50,
+        solver: 'forceAtlas2Based',
+        timestep: 0.35,
+        stabilization: { iterations: 150 }
+      },
+      edges: {
+        smooth: {
+          type: 'continuous'
+        }
+      },
+      interaction: {
+        hover: true,
+        tooltipDelay: 200,
+        zoomView: true
+      }
+    };
+    var network = new vis.Network(container, data, options);
+  </script>
+</body>
+</html>
