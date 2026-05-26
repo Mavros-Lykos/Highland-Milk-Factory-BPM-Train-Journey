@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BPM Flowcharts - Members 4, 5 & 6 - Highland Milk Factory</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="process_engine.js"></script>
   <style>
     :root {
       --bg-color: #0b0f19;
@@ -694,36 +695,10 @@
     };
 
     function buildProcessFlow(processName, deptId) {
-      let steps = [];
-      steps.push({ type: "start", text: `Start: Initiate ${processName} sequence` });
-      
-      if (deptId === 4) { // Sales
-        steps.push({ type: "input", text: "Receive marketing campaign parameters or distributor order details" });
-        steps.push({ type: "action", text: "Validate against regional sales quotas & Highland brand guidelines" });
-        steps.push({ type: "action", text: "Coordinate with logistics for cold-chain route availability" });
-        steps.push({ type: "decision", text: "Are dealer credit lines and stock levels verified?", yes: "Release sales invoice and dispatch goods from warehouse", no: "Place order on hold and request payment clearance from Finance" });
-        steps.push({ type: "action", text: "Update regional market share and sales metrics database" });
-        steps.push({ type: "output", text: "Deliver invoice & sales performance summary report to Management" });
-      } 
-      else if (deptId === 5) { // Finance
-        steps.push({ type: "input", text: "Acquire invoice matching metadata or payment voucher vouchers" });
-        steps.push({ type: "action", text: "Verify government treasury rules & stamp duty compliance" });
-        steps.push({ type: "action", text: "Execute double-entry ledger reconciliation against bank statements" });
-        steps.push({ type: "decision", text: "Does internal audit confirm budget compliance?", yes: "Approve transaction and disburse funds via bank transfer", no: "Flag for financial steering committee review & budget adjustment" });
-        steps.push({ type: "action", text: "Log transactions into central ERP financial ledger" });
-        steps.push({ type: "output", text: "Provide updated balance sheet & monthly expenditure report to Auditor General" });
-      } 
-      else { // HR
-        steps.push({ type: "input", text: "Collect employee requisition forms or leave/attendance records" });
-        steps.push({ type: "action", text: "Verify against government service rules and union agreements" });
-        steps.push({ type: "action", text: "Conduct verification audits and update the HRIS employee database" });
-        steps.push({ type: "decision", text: "Does employee profile pass standard background & medical tests?", yes: "Issue confirmation letter or process monthly payout benefits", no: "Notify employee and trigger performance management protocol" });
-        steps.push({ type: "action", text: "Update safety and ISO food safety training certification logs" });
-        steps.push({ type: "output", text: "Generate official payslips and HR metrics report for factory management" });
+      if (window.generateSpecificFlow) {
+        return window.generateSpecificFlow(processName, deptId);
       }
-
-      steps.push({ type: "end", text: `End: ${processName} records archived and finalized` });
-      return steps;
+      return [{ type: "start", text: `Start: Initiate ${processName}` }];
     }
 
     function generateComment(processName) {
