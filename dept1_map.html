@@ -6,3 +6,72 @@
   <title>Dairy Development & Milk Procurement - Macro Interaction Map</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+    #header {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 1.5rem 2rem;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1e293b;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #22c55e;
+    }
+    p {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+    .btn {
+      background: #1e293b;
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid #334155;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #334155; }
+    #mynetwork {
+      width: 100vw;
+      height: 100vh;
+    }
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #1e293b;
+      z-index: 10;
+      font-size: 0.85rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .legend-color {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      margin-right: 0.75rem;
+    }
+  </style>
+</head>
