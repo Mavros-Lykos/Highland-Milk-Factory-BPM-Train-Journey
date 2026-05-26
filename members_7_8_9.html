@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BPM Flowcharts - Members 7, 8 & 9 - Highland Milk Factory</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="process_engine.js"></script>
   <style>
     :root {
       --bg-color: #0b0f19;
@@ -694,36 +695,10 @@
     };
 
     function buildProcessFlow(processName, deptId) {
-      let steps = [];
-      steps.push({ type: "start", text: `Start: Initiate ${processName} sequence` });
-      
-      if (deptId === 7) { // Engineering
-        steps.push({ type: "input", text: "Acquire preventive maintenance schedule or emergency breakdown ticket details" });
-        steps.push({ type: "action", text: "Verify tool availability & shut down power supply line (LOTO protocol)" });
-        steps.push({ type: "action", text: "Inspect mechanical/electrical components and replace worn parts" });
-        steps.push({ type: "decision", text: "Does equipment performance test meet ISO calibration criteria?", yes: "Commission machine back into service & close work ticket", no: "Escalate to Senior Engineer & schedule specialized contractor repair" });
-        steps.push({ type: "action", text: "Log maintenance activities and parts used into Engineering Inventory System" });
-        steps.push({ type: "output", text: "Deliver updated equipment log and compliance certificate to Operations" });
-      } 
-      else if (deptId === 8) { // Transport
-        steps.push({ type: "input", text: "Acquire dispatch manifest or collection route log data sheet" });
-        steps.push({ type: "action", text: "Execute vehicle safety checks & inspect refrigeration settings (3-4°C)" });
-        steps.push({ type: "action", text: "Monitor real-time GPS fleet tracking coordinates" });
-        steps.push({ type: "decision", text: "Are temperature parameters verified within cold chain limit?", yes: "Proceed along route and record proof of delivery receipt", no: "Instruct driver to divert tanker and initiate emergency cold chain protocols" });
-        steps.push({ type: "action", text: "Submit final trip sheet details & fuel consumption records" });
-        steps.push({ type: "output", text: "Generate daily transport log and send fuel usage statement to Finance" });
-      } 
-      else { // Procurement
-        steps.push({ type: "input", text: "Review material requisition requests or incoming supplier quotes" });
-        steps.push({ type: "action", text: "Ensure compliance with government tender procurement rules" });
-        steps.push({ type: "action", text: "Select candidate vendor & generate official purchase order (PO)" });
-        steps.push({ type: "decision", text: "Does procurement amount require Government Procurement Committee approval?", yes: "Submit documentation to Committee and wait for official sign-off", no: "Approve order directly and transmit purchase order to supplier" });
-        steps.push({ type: "action", text: "Receive materials, generate Goods Received Note (GRN), and allocate storage bins" });
-        steps.push({ type: "output", text: "Dispatch certified GRN and matching supplier invoice to Accounts Payable" });
+      if (window.generateSpecificFlow) {
+        return window.generateSpecificFlow(processName, deptId);
       }
-
-      steps.push({ type: "end", text: `End: ${processName} cycle complete` });
-      return steps;
+      return [{ type: "start", text: `Start: Initiate ${processName}` }];
     }
 
     function generateComment(processName) {
