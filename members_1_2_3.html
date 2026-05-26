@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BPM Flowcharts - Members 1, 2 & 3 - Highland Milk Factory</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="process_engine.js"></script>
   <style>
     :root {
       --bg-color: #0b0f19;
@@ -697,39 +698,10 @@
 
     // Procedural steps builder based on process metadata and naming
     function buildProcessFlow(processName, deptId) {
-      let steps = [];
-      const cleanName = processName.toLowerCase();
-      
-      // Dynamic generators matching Milco's Pattipola context
-      steps.push({ type: "start", text: `Start: Initiate ${processName} procedure` });
-      
-      if (deptId === 1) { // DD&MP
-        steps.push({ type: "input", text: "Receive data sheet from dairy farmer or Field Officer" });
-        steps.push({ type: "action", text: `Verify records against local Farmer Managed Society (FMS) ledger` });
-        steps.push({ type: "action", text: "Analyze local milk yield statistics and route efficiency parameters" });
-        steps.push({ type: "decision", text: "Do parameters comply with Milco's procurement criteria?", yes: "Log details in Milco Procurement System", no: "Issue clarification or rejection notice" });
-        steps.push({ type: "action", text: "Update farmer accounts & calculate transport subsidy or quality bonuses" });
-        steps.push({ type: "output", text: "Generate daily/weekly collection statements & send payout advice to Finance" });
-      } 
-      else if (deptId === 2) { // Production
-        steps.push({ type: "input", text: "Aquire batch raw material data from Silo/Tanker reception logs" });
-        steps.push({ type: "action", text: `Configure production equipment and check steam supply pressure` });
-        steps.push({ type: "action", text: "Run automated pre-production clean-in-place (CIP) wash sequence" });
-        steps.push({ type: "decision", text: "Are temperature/pressure parameters inside production threshold?", yes: "Initiate product run batch sequence", no: "Recalibrate control valves and notify plant supervisor" });
-        steps.push({ type: "action", text: "Extract hourly samples for factory floor laboratory physical parameter validation" });
-        steps.push({ type: "output", text: "Transfer finished goods to cold storage or powder packing silos" });
-      } 
-      else { // QA
-        steps.push({ type: "input", text: "Extract representative batch samples from production floor or reception bays" });
-        steps.push({ type: "action", text: `Calibrate laboratory instruments against certified standard solutions` });
-        steps.push({ type: "action", text: "Perform chemical, physical, and microbiological assays under sterile conditions" });
-        steps.push({ type: "decision", text: "Do analysis values meet Sri Lanka Standards Institution (SLSI/SLS) specs?", yes: "Approve quality batch clearance release", no: "Trigger non-conformance hold report and quarantine materials" });
-        steps.push({ type: "action", text: "Log test metrics into Lab Information Management System (LIMS)" });
-        steps.push({ type: "output", text: "Issue official Certificate of Analysis (CoA) & dispatch release documents" });
+      if (window.generateSpecificFlow) {
+        return window.generateSpecificFlow(processName, deptId);
       }
-
-      steps.push({ type: "end", text: `End: ${processName} cycle complete and archived` });
-      return steps;
+      return [{ type: "start", text: `Start: Initiate ${processName}` }];
     }
 
     function generateComment(processName) {
